@@ -1,0 +1,15 @@
+*, *:active, *:hover {
+    outline: none;
+}
+
+html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.autoresize {
+    width: 100%;
+}
+
+.textarea-resize-vertical {
+    resize: vertical;
+}

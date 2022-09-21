@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ionite (Browser) Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <style type="text/css">
+        .tg {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .tg td {
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            overflow: hidden;
+            padding: 10px 5px;
+            word-break: normal;
+        }
+
+        .tg th {
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            overflow: hidden;
+            padding: 10px 5px;
+            word-break: normal;
+        }
+
+        .tg .tg-0lax {
+            text-align: left;
+            vertical-align: top
+        }
+
+        .helper_1 {
+            display: block;
+            overflow: hidden;
+            padding-right: 10px;
+        }
+
+        .code-output {
+            color: white;
+            background-color: black;
+        }
+
+        textarea,
+        input[type=text] {
+            font-size: .8rem;
+            letter-spacing: 1px;
+            box-shadow: 1px 1px 1px #999;
+            border-radius: 5px;
+            border-style: solid;
+        }
+
+        textarea {
+            padding: 10px;
+            max-width: 100%;
+            line-height: 1.5;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Ionite Browser Interpreter Demo</h1>
+    <p>This example demonstrates how to run the Ionite REPL inside a browser</p>
+    <form onsubmit="return eval_script()">
+        <table class="tg">
+            <thead>
+                <tr>
+                    <th class="tg-0lax">
+                        <label for="program_examples">Load an example</label>
+                    </th>
+                    <th class="tg-0lax">
+                        <select id="program_examples">
+                            <option value="select_example">Select an example...</option>
+                        </select>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="tg-0lax">
+                        <label for="program_title">Program title</label>
+                    </td>
+                    <td class="tg-0lax">
+                        <span class="helper_1">
+                            <input type="text" id="program_title" class="autoresize" placeholder="(Optional)">
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tg-0lax">
+                        <label for="program_code">Enter your code here</label>
+                    </td>
+                    <td class="tg-0lax">
+                        <textarea class="textarea-resize-vertical" name="program_code" id="program_code" cols="69"
+                            rows="10">
+set compiler=1.1
+print using compiler '$compiler'
+
+set name = ?input
+print Nice to meet you, $name!
+
+begin say_hello
+    print Hello :)
+end
+
+dump
+</textarea>
+                    </td>
+                </tr>
+                <br>
+                <td class="tg-0lax">
+                    <label for="program_output"></label>
+                </td>
+                <td class="tg-0lax">
+                    <textarea class="textarea-resize-vertical code-output" id="program_output" cols="69" rows="10"
+                        disabled>Click evaluate to see the output...</textarea>
+                </td>
+                </br>
+            </tbody>
+        </table>
+        <br>
+        <button type="submit">Evaluate</button>
+        <button onclick="window.location = '/'">Clear</button>
+    </form>
+</body>
+
+<script src="ionite.compiler.min.js"></script>
+<script src="examples.js"></script>
+
+<script>
+    let program_name = document.getElementById('program_title')
+    let program_list = document.getElementById('program_examples')
+    let program_value = document.getElementById('program_code')
+
+
+    program_name.value = `Untitled Program ${Math.round(Math.random() * 100)}`
+
+    Object.keys(ionite_examples).forEach(key => {
+        var opt = document.createElement('option');
+        
+        opt.value = key;
+        opt.innerHTML = key;
+        opt.onchange = () => {
+            program_value.value = ionite_examples[opt.value]
+        }
+
+        program_list.appendChild(opt);
+    })
+
+    function eval_script() {
+        let code = program_value.value
+        let program_output = document.getElementById('program_output')
+
+        IoniteRepl.eval(code)
+        
+        program_output.value = IoniteRepl.get_output_buffer()
+        program_output.scrollTop = program_output.scrollHeight;
+
+        return false;
+    }
+</script>
+
+</html>

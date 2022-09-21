@@ -1,0 +1,8 @@
+# an example ionite script to show stdin input
+
+set ionite_version = '1.1'
+
+print What's your name?
+set name = ?input
+
+print Nice to meet you, $name!
